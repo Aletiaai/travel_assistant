@@ -1,7 +1,8 @@
+# tests/unit/test_reporter_agent.py
 import pytest
-import asyncio
-from unittest.mock import AsyncMock, patch
 from src.agents.reporter_agent import ReporterAgent
+from unittest.mock import patch, AsyncMock
+
 
 @pytest.mark.asyncio
 async def test_reporter_agent_process():
@@ -13,7 +14,8 @@ async def test_reporter_agent_process():
         "optimized_plan": "Drive from San Francisco to Los Angeles with scenic stops",
         "route_data": {"distance": "600 km", "duration": "6 hours"},
         "weather_origin": {"city": "San Francisco", "temperature": 20, "weather": "clear"},
-        "weather_destination": {"city": "Los Angeles", "temperature": 25, "weather": "sunny"}
+        "weather_destination": {"city": "Los Angeles", "temperature": 25, "weather": "sunny"},
+        "preferences": {"avoid_bad_weather": True, "include_pois": True}
     }
 
     # Mock LLM response (Google Docs-style text itinerary)
@@ -27,26 +29,22 @@ async def test_reporter_agent_process():
     **Plan**: Drive with scenic stops
     """
 
-    # Patch generate_response
-    with patch.object(agent, "generate_response", AsyncMock(return_value=mock_itinerary)):
+    # Patch llm_client.generate
+    with patch.object(agent.llm_client, "generate", AsyncMock(return_value=mock_itinerary)):
         result = await agent.process(input_data)
 
-    # Assertions
-    assert isinstance(result, dict), "Result should be a dictionary"
-    assert "final_itinerary" in result, "Result should contain 'final_itinerary' key"
-    assert result["final_itinerary"] == mock_itinerary, "Final itinerary should match mocked response"
-    assert isinstance(result["final_itinerary"], str), "Final itinerary should be a string"
+    assert result["final_itinerary"] == mock_itinerary
+    assert isinstance(result, dict)
+
 
 @pytest.mark.asyncio
 async def test_reporter_agent_missing_input():
     # Initialize ReporterAgent
     agent = ReporterAgent()
 
-    # Mock input data with missing optimized_plan
+    # Mock input data with missing required fields
     input_data = {
-        "route_data": {"distance": "600 km", "duration": "6 hours"},
-        "weather_origin": {"city": "San Francisco", "temperature": 20, "weather": "clear"},
-        "weather_destination": {"city": "Los Angeles", "temperature": 25, "weather": "sunny"}
+        "optimized_plan": "Drive from San Francisco to Los Angeles"
     }
 
     # Test for ValueError

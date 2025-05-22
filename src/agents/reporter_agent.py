@@ -13,7 +13,7 @@ class ReporterAgent(BaseAgent):
             route_data = input_data.get("route_data")
             weather_origin = input_data.get("weather_origin")
             weather_destination = input_data.get("weather_destination")
-            preferences = input_data.get("preferences")
+            preferences = input_data.get("preferences",{})
 
             missing_inputs = []
             if not optimized_plan:
