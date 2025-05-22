@@ -49,7 +49,7 @@ Chain-of-thought critique enables systematic, transparent evaluation, supporting
 Setup Instructions
 
 Clone Repository:
-git clone https://github.com/username/travel-agent-prototype.git
+git clone https://github.com/username/travel-assistant
 cd travel-agent-prototype
 
 
