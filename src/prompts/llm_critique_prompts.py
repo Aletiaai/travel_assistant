@@ -7,6 +7,12 @@ Context:
 - User Query; Specifies the user’s travel goals and requirements.
 '{query}'.
 
+-User origin; the departure point from which the user will start the journey:
+'{origin}'.
+
+-User destination; the arraival point to which the user will end the journey:
+'{destination}'.
+
 - User Preferences; details preferences such as avoiding bad weather, including points of interest, budget, or specific activities.
 '{preferences}'.
 
@@ -33,12 +39,12 @@ Follow this chain-of-thought process to evaluate the itinerary:
 4. Comments: Provide a concise explanation for each score, highlighting strengths, weaknesses, and any missing elements.
 #####################
 Output: Return a JSON object with the following structure:
-{
+{{
   "route_feasibility": <float>,
   "constraint_satisfaction": <float>,
   "response_quality": <float>,
   "comments": "<detailed explanation of scores, including specific examples from the itinerary>"
-}
+}}
 
 **Error Handling**: If any input (query, preferences, itinerary) is incomplete or unclear, note the limitation in the comments and assign scores based on available information, using reasonable assumptions.
 """
